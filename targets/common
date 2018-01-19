@@ -99,45 +99,6 @@ elif [ -z "$TARGETNOINSTALL" -o -n "$RESTOREHOSTBIN" ]; then
     if [ "${t#/}" = "$t" ]; then
         t="$TARGETSDIR/$t"
     fi
-    awk '
-        (FNR == 1) {
-            ok = 0;
-        }
-        /^###/ {
-            ok = 1;
-            if ($2 == "append") {
-                ARGV[ARGC++] = "'"$TARGETSDIR"'/" $3;
-            }
-            next;
-        }
-        ok && /^ *compile / {
-            src = "'"${SRCDIR:-$TARGETSDIR/../src}"'/" $2 ".c";
-        }
-        src && $NF != substr("\\\\", 1, 1) {
-            print $0 " <<EOF"
-            while ((getline line < src) > 0) {
-               if (line ~ /^#include \".*\.h\"$/) {
-                   include = line
-                   sub(/^#include \"/, "", include)
-                   sub(/\"$/, "", include)
-                   include = "'"${SRCDIR:-$TARGETSDIR/../src}"'/" include;
-                   print "// BEGIN " include
-                   while ((getline line < include) > 0) {
-                       print line
-                   }
-                   close(include)
-                   print "// END " include
-               } else {
-                   print line
-               }
-            }
-            close(src)
-            print "EOF"
-            src = "";
-            next
-        }
-        ok;
-    ' "$t"
 fi
 # Break out of the subshell.
 exit
