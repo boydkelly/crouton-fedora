@@ -13,7 +13,7 @@ echo
 echo "Getting Docker build from Fedora Koji buildsystem..."
 echo
 
-curl $MIRROR -# -L --connect-timeout 60 --retry 2o "$tmp/docker-fedora.tar.xz"
+curl $MIRROR -# -L --connect-timeout 60 --retry 2 -o "$tmp/docker-fedora.tar.xz"
 
 cd $tmp
 
